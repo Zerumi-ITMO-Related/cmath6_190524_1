@@ -11,7 +11,11 @@ class AdamsMethod(
 
     companion object {
         const val X_Y_VALUES = 4
+        const val METHOD_ERROR = 4
     }
+
+    override val methodError: Int
+        get() = METHOD_ERROR
 
     override fun solve(x0: Double, xN: Double, h: Double, y0: Double): List<Double> {
         val n = ((xN - x0) / h).roundToInt()

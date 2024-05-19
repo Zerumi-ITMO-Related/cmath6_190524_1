@@ -4,6 +4,13 @@ import io.github.zerumi.equations.SimpleDifferentialEquation
 import kotlin.math.roundToInt
 
 class EulerMethod(private val equation: SimpleDifferentialEquation) : SimpleDifferentialEquationSolvingMethod {
+    companion object {
+        const val METHOD_ERROR = 1
+    }
+
+    override val methodError: Int
+        get() = METHOD_ERROR
+
     override fun solve(x0: Double, xN: Double, h: Double, y0: Double): List<Double> {
         val n = ((xN - x0) / h).roundToInt()
         val result = mutableListOf(y0)
