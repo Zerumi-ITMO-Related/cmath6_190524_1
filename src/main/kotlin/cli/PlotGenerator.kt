@@ -11,8 +11,8 @@ import com.indvd00m.ascii.render.elements.plot.api.IPlotPoint
 import com.indvd00m.ascii.render.elements.plot.misc.PlotPoint
 
 fun drawPlot(
-    sourcePoints : List<Double>,
-    startX : Double,
+    sourcePoints: List<Double>,
+    startX: Double,
     endX: Double,
 ) {
     val points: MutableList<IPlotPoint> = ArrayList()

@@ -13,7 +13,7 @@ class RungeRule(private val method: SimpleDifferentialEquationSolvingMethod, acc
         get() = method.methodError
 
     override fun solve(x0: Double, xN: Double, h: Double, y0: Double): List<Double> {
-        var result : List<Double>
+        var result: List<Double>
         var step = h
 
         do {
