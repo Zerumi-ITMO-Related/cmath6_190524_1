@@ -20,6 +20,7 @@ repositories {
 
 dependencies {
     implementation("com.github.ajalt.clikt:clikt:4.4.0")
+    implementation("com.indvd00m.ascii.render:ascii-render:2.2.0")
     testImplementation(kotlin("test"))
 }
 

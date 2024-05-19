@@ -8,6 +8,10 @@ import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.double
 import com.github.ajalt.clikt.parameters.types.int
 import com.github.ajalt.clikt.parameters.types.restrictTo
+import io.github.zerumi.cli.drawMatrix
+import io.github.zerumi.cli.drawPlot
+import io.github.zerumi.cli.reduceList
+import io.github.zerumi.correction.RungeRule
 import io.github.zerumi.equations.FirstEquation
 import io.github.zerumi.equations.SecondEquation
 import io.github.zerumi.equations.ThirdEquation
@@ -58,13 +62,28 @@ class CLI : CliktCommand() {
         .help("How accurate result should be (e -> 10^(-e), from 0 to 8)")
 
     override fun run() {
-        val eulerMethod = EulerMethod(equation)
-        println("Euler method solution: ${eulerMethod.solve(x0, xN, h, y0)}")
+        val xSequence = generateSequence(x0) { it + h }.takeWhile { it < xN + h }
 
-        val rungeKuttaMethod = RungeKuttaMethod(equation)
-        println("RungeKutta method solution: ${rungeKuttaMethod.solve(x0, xN, h, y0)}")
+        val eulerMethod = RungeRule(EulerMethod(equation), accuracy)
+        val eulerSolution = reduceList(eulerMethod.solve(x0, xN, h, y0), x0, xN, h)
+        // println("Euler method solution: $eulerSolution")
 
-        val adamsMethod = AdamsMethod(equation, RungeKuttaMethod(equation))
-        println("Adams method solution: ${adamsMethod.solve(x0, xN, h, y0)}")
+        val rungeKuttaMethod = RungeRule(RungeKuttaMethod(equation), accuracy)
+        val rungeKuttaSolution = reduceList(rungeKuttaMethod.solve(x0, xN, h, y0), x0, xN, h)
+        // println("RungeKutta method solution: $rungeKuttaSolution")
+
+        val adamsMethod = RungeRule(AdamsMethod(equation, RungeKuttaMethod(equation)), accuracy)
+        val adamsSolution = reduceList(adamsMethod.solve(x0, xN, h, y0), x0, xN, h)
+        // println("Adams method solution: $adamsSolution")
+
+        drawMatrix(
+            arrayOf(
+                xSequence.toList().toTypedArray(),
+                eulerSolution.toTypedArray(),
+                rungeKuttaSolution.toTypedArray(),
+                adamsSolution.toTypedArray()
+            )
+        )
+        drawPlot(rungeKuttaMethod.solve(x0, xN, h, y0), x0, xN)
     }
 }
